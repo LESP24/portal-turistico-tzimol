@@ -1,26 +1,189 @@
+/* =============================================================
+   globals.css — Portal Turístico de Tzimol
+   TAILWIND CSS v4  ←  sintaxis completamente diferente a v3
+   ─────────────────────────────────────────────────────────────
+   v3 usaba:  @tailwind base; @tailwind components; @tailwind utilities;
+              + tailwind.config.ts para el tema
+   v4 usa:    @import "tailwindcss";
+              + @theme {} aquí en el CSS para todo el tema
+   ============================================================= */
+
+/* Única línea que reemplaza los 3 @tailwind de v3 */
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* =============================================================
+   TEMA PERSONALIZADO "SELVA CHIAPANECA"
+   En v4, @theme reemplaza a tailwind.config.ts → theme.extend
+   Cada variable crea automáticamente las utilidades de Tailwind:
+     --color-jade  →  bg-jade, text-jade, border-jade, ring-jade…
+     --font-titulo →  font-titulo
+     --animate-*   →  animate-*
+     --shadow-*    →  shadow-*
+   ============================================================= */
+@theme {
+
+  /* ── COLORES ── */
+  --color-selva:     #1E3A2F;   /* Verde selva profundo — fondos principales */
+  --color-jade:      #2D5A4B;   /* Verde jade — botones primarios            */
+  --color-canopy:    #4A7C59;   /* Verde dosel — estados hover               */
+  --color-sol:       #D4A853;   /* Dorado sol — acento principal             */
+  --color-terracota: #B85C38;   /* Terracota — botón secundario              */
+  --color-crema:     #F7F2E8;   /* Crema cálida — fondos claros              */
+  --color-corteza:   #2A1810;   /* Café oscuro — texto principal             */
+
+  /* ── FUENTES ── */
+  /* 📌 CMS: Las fuentes las carga next/font en layout.tsx;
+     estas variables CSS las consumen los componentes. */
+  --font-titulo: 'Abril Fatface', serif;
+  --font-cuerpo: 'Lora', serif;
+
+  /* ── ANIMACIONES ── */
+  --animate-flote:     flote 6s ease-in-out infinite;
+  --animate-revelar:   revelar 0.7s ease-out forwards;
+  --animate-pulso-sol: pulso-sol 2.5s ease-in-out infinite;
+
+  /* ── SOMBRAS PERSONALIZADAS ── */
+  --shadow-carta:       0 4px 24px rgba(30, 58, 47, 0.12);
+  --shadow-carta-hover: 0 12px 40px rgba(30, 58, 47, 0.22);
+  --shadow-sol:         0 0 32px rgba(212, 168, 83, 0.35);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* =============================================================
+   KEYFRAMES  (deben definirse fuera de @theme)
+   ============================================================= */
+@keyframes flote {
+  0%, 100% { transform: translateY(0px);  }
+  50%       { transform: translateY(-12px); }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@keyframes revelar {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0px);  }
+}
+
+@keyframes pulso-sol {
+  0%, 100% { opacity: 0.7; transform: scale(1);    }
+  50%      { opacity: 1;   transform: scale(1.05); }
+}
+
+/* =============================================================
+   RESET Y BASE
+   ============================================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-crema);
+  color: var(--color-corteza);
+  font-family: var(--font-cuerpo), Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =============================================================
+   COMPONENTES REUTILIZABLES
+   ─────────────────────────────────────────────────────────────
+   ⚠️  En Tailwind v4, @apply con variantes responsive (sm:, lg:)
+   dentro de @layer components NO funciona igual que en v3.
+   Solución: escribir el CSS puro con media queries anidadas
+   (soportado en CSS moderno y PostCSS de v4).
+   ============================================================= */
+@layer components {
+
+  /* ── Contenedor de ancho máximo ── */
+  .contenedor-sitio {
+    max-width: 80rem;         /* equivale a max-w-7xl  */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;       /* equivale a px-4       */
+    padding-right: 1rem;
+
+    /* Equivale a sm:px-6 */
+    @media (min-width: 640px) {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    /* Equivale a lg:px-8 */
+    @media (min-width: 1024px) {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  /* ── Botón primario — verde jade ── */
+  .boton-primario {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--color-jade);
+    color: var(--color-crema);
+    font-family: var(--font-cuerpo);
+    font-size: 0.875rem;       /* text-sm  */
+    font-weight: 500;
+    padding: 0.625rem 1.25rem; /* py-2.5 px-5 */
+    border-radius: 9999px;
+    transition: all 0.3s;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .boton-primario:hover {
+    background-color: var(--color-selva);
+  }
+
+  .boton-primario:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(212, 168, 83, 0.6);
+  }
+
+  /* ── Botón secundario — terracota ── */
+  .boton-secundario {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--color-terracota);
+    color: var(--color-crema);
+    font-family: var(--font-cuerpo);
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.625rem 1.25rem;
+    border-radius: 9999px;
+    transition: all 0.3s;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .boton-secundario:hover {
+    background-color: var(--color-selva);
+  }
+
+  .boton-secundario:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(212, 168, 83, 0.6);
+  }
+}
+
+/* =============================================================
+   UTILIDADES DE ANIMACIÓN ESCALONADA
+   Uso: <div className="animacion-revelar retraso-300">
+   ============================================================= */
+@layer utilities {
+  .animacion-revelar {
+    opacity: 0;
+    animation: revelar 0.7s ease-out forwards;
+  }
+  .retraso-100 { animation-delay: 0.1s; }
+  .retraso-200 { animation-delay: 0.2s; }
+  .retraso-300 { animation-delay: 0.3s; }
+  .retraso-400 { animation-delay: 0.4s; }
+  .retraso-500 { animation-delay: 0.5s; }
+  .retraso-600 { animation-delay: 0.6s; }
 }

@@ -1,0 +1,32 @@
+{
+  "ecoturismo": [
+    { "id": "chiflon", "nombre": "El Chiflón", "descripcion": "Cascadas impresionantes y naturaleza.", "imagen": "/imagenes/chiflon.jpg", "sitioWebOficial": null },
+    { "id": "tzimoleras", "nombre": "Las 3 Tzimoleras", "descripcion": "Aventura, canyoning y campamento.", "imagen": "/imagenes/tzimoleras.jpg", "sitioWebOficial": "https://www.tzimol.com" },
+    { "id": "ojo-agua", "nombre": "El Ojo de Agua", "descripcion": "Manantial cristalino para disfrutar en familia.", "imagen": "/imagenes/ojo-agua.jpg", "sitioWebOficial": null },
+    { "id": "la-rejoya", "nombre": "La Rejoya", "descripcion": "Un rincón natural imperdible.", "imagen": "/imagenes/rejoya.jpg", "sitioWebOficial": null },
+    { "id": "sendero-comitan", "nombre": "Sendero extraordinario por naturaleza", "descripcion": "Ruta natural Comitán ~ Tzimol.", "imagen": "/imagenes/sendero.jpg", "sitioWebOficial": null },
+    { "id": "cascada-abuelo", "nombre": "Cascada el abuelo", "descripcion": "Tranquilidad y caídas de agua hermosas.", "imagen": "/imagenes/cascada-abuelo.jpg", "sitioWebOficial": null },
+    { "id": "canto-agua", "nombre": "Canto del agua", "descripcion": "Centro ecoturístico relajante.", "imagen": "/imagenes/canto-agua.jpg", "sitioWebOficial": null },
+    { "id": "las-pozas", "nombre": "Las Pozas", "descripcion": "Albercas naturales de agua fresca.", "imagen": "/imagenes/pozas.jpg", "sitioWebOficial": null }
+  ],
+  "rutasCulturales": [
+    { "id": "ruta-posh", "nombre": "La Ruta del Posh", "autor": "Alonso Guillén Vera", "imagen": "/imagenes/ruta-posh.jpg" },
+    { "id": "ruta-murales", "nombre": "La Ruta de los murales", "autor": "Aron Abadia", "imagen": "/imagenes/ruta-murales.jpg" },
+    { "id": "ruta-petate", "nombre": "Ruta del Petate", "autor": "Angel Gordillo", "imagen": "/imagenes/ruta-petate.jpg" },
+    { "id": "ruta-panela", "nombre": "Ruta de la panela", "autor": "Angel Gordillo", "imagen": "/imagenes/ruta-panela.jpg" }
+  ],
+  "gastronomiaYServicios": [
+    { "id": "palapa-modin", "nombre": "La palapa de modin", "tipo": "Restaurante", "imagen": "/imagenes/modin.jpg" },
+    { "id": "lacandonia", "nombre": "Lacandonia", "tipo": "Servicio Gastronómico", "imagen": "/imagenes/lacandonia.jpg" },
+    { "id": "el-paso", "nombre": "El Paso", "tipo": "Restaurante", "imagen": "/imagenes/el-paso.jpg" },
+    { "id": "puma-rosa", "nombre": "La puma Rosa", "tipo": "Servicio Local", "imagen": "/imagenes/puma-rosa.jpg" },
+    { "id": "el-dorado", "nombre": "El dorado", "tipo": "Servicio Local", "imagen": "/imagenes/el-dorado.jpg" }
+  ],
+  "comunidades": [
+    { "id": "comunidad-chiflon", "nombre": "El Chiflón", "descripcion": "Comunidad aledaña a las cascadas.", "imagen": "/imagenes/comunidad-chiflon.jpg" },
+    { "id": "la-tapa", "nombre": "La Tapa", "descripcion": "Comunidad con gran riqueza cultural.", "imagen": "/imagenes/la-tapa.jpg" },
+    { "id": "laguna-esquel", "nombre": "Laguna esquel", "descripcion": "Zona con paisajes únicos.", "imagen": "/imagenes/laguna-esquel.jpg" },
+    { "id": "la-presa", "nombre": "La presa, Leningrado", "descripcion": "Comunidad cercana a la presa.", "imagen": "/imagenes/la-presa.jpg" },
+    { "id": "san-cristobalito", "nombre": "San Cristobalito", "descripcion": "Ruinas el Chiflón y zona arqueológica.", "imagen": "/imagenes/san-cristobalito.jpg" }
+  ]
+}

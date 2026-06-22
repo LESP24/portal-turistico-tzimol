@@ -11,23 +11,12 @@ const configuracion: NextConfig = {
   // -----------------------------------------------------------
   images: {
     // Patrones de dominios remotos permitidos para <Image>
-    // 📌 CMS: Cuando el cliente suba imágenes a un CDN,
-    //         agregar el dominio aquí. Ejemplos:
-    //
-    // remotePatterns: [
-    //   {
-    //     protocol: 'https',
-    //     hostname: 'cdn.tzimol.gob.mx',  // CDN propio del municipio
-    //   },
-    //   {
-    //     protocol: 'https',
-    //     hostname: '**.sanity.io',        // Si se usa Sanity CMS
-    //   },
-    //   {
-    //     protocol: 'https',
-    //     hostname: 'res.cloudinary.com',  // Si se usa Cloudinary
-    //   },
-    // ],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.sanity.io', // Habilitado para Sanity CMS
+      },
+    ],
 
     // Formatos modernos que Next.js generará automáticamente
     formats: ['image/avif', 'image/webp'],

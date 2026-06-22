@@ -10,6 +10,23 @@ export default {
       validation: (Rule: any) => Rule.required(),
     },
     {
+      name: 'slug',
+      title: 'Identificador (URL)',
+      type: 'slug',
+      options: {
+        source: 'nombre',
+        maxLength: 96,
+      },
+      validation: (Rule: any) => Rule.required(),
+    },
+    {
+      // AHORA SÍ: EL CAMPO ORDEN ESTÁ LIBRE Y EN SU LUGAR
+      name: 'orden',
+      title: 'Orden de aparición',
+      type: 'number',
+      description: 'Escribe 1 para Las 3 Tzimoleras, 2 para el siguiente, etc.',
+    },
+    {
       name: 'descripcion',
       type: 'text',
       title: 'Descripción',

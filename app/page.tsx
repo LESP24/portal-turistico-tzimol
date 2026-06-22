@@ -1,32 +1,13 @@
 // =============================================================
 // app/page.tsx — Página principal del Portal Turístico de Tzimol
 // =============================================================
-//
-// ARQUITECTURA DE DATOS:
-// ──────────────────────
-// Actualmente: los datos se importan directamente del JSON local.
-//
-// 📌 CMS — FUTURA INTEGRACIÓN:
-//   Cuando el cliente tenga su panel de administrador listo,
-//   reemplazar la importación del JSON con una llamada al API.
-//
-//   Opción A — API REST (Strapi, Directus, custom):
-//     const datos = await fetch('https://cms.tzimol.gob.mx/api/portal', {
-//       next: { revalidate: 3600 } // ISR: actualiza cada hora
-//     }).then(r => r.json() as Promise<DatosTzimol>);
-//
-//   Opción B — CMS headless (Sanity):
-//     import { sanityClient } from '@/lib/sanity';
-//     const datos = await sanityClient.fetch(QUERY_DATOS_TZIMOL);
-//
-//   Opción C — Base de datos directa (con Prisma/Drizzle):
-//     import { db } from '@/lib/db';
-//     const datos = await db.obtenerDatosTzimol();
-//
-// =============================================================
 
 import datosTzimol from '../data/datos_tzimol.json';
 import type { DatosTzimol } from '../types/tipos';
+
+// 1. IMPORTACIONES DE SANITY (NUEVO)
+import { clienteSanity } from '../sanity/cliente';
+import { groq } from 'next-sanity';
 
 // Componentes del portal
 import GestionMunicipal from '@/components/GestionMunicipal';
@@ -35,26 +16,43 @@ import TarjetaLugar from '../components/TarjetaLugar';
 import SeccionRutas from '../components/SeccionRutas';
 import CuadriculaComunidades from '../components/CuadriculaComunidades';
 
-// Casting al tipo fuerte para que TypeScript valide la estructura
+// 2. FUNCIÓN PARA TRAER DATOS DE LA NUBE (NUEVO)
+// Esta función va a tu base de datos y formatea los datos 
+// para que queden igualitos a como los tenías en el JSON.
+async function obtenerDestinosEcoturismo() {
+  const destinos = await clienteSanity.fetch(
+    // FÍJATE EN LA PRIMERA LÍNEA, AHÍ ESTÁ LA MAGIA DEL ORDEN:
+    groq`*[_type == "lugarTuristico"] | order(orden asc) {
+      "id": slug.current,
+      nombre,
+      descripcion,
+      "imagen": imagenPrincipal.asset->url,
+      "sitioWebOficial": enlaceExterno
+    }`,
+    {}, 
+    { cache: 'no-store' } 
+  );
+  return destinos;
+}
+
+// Casting al tipo fuerte para el resto de las secciones estáticas
 const datos = datosTzimol as DatosTzimol;
 
-// -----------------------------------------------------------
-// Metadatos específicos de esta página (extienden layout.tsx)
-// -----------------------------------------------------------
 export const metadata = {
   title: 'Inicio',
 };
 
-// -----------------------------------------------------------
-// Página principal — Componente de Servidor (Server Component)
-// -----------------------------------------------------------
-export default function PaginaPrincipal() {
+// 3. CONVERTIMOS LA PÁGINA EN ASÍNCRONA (agregamos 'async')
+export default async function PaginaPrincipal() {
+  
+  // 4. DESCARGAMOS LOS DATOS EN TIEMPO REAL
+  const destinosSanity = await obtenerDestinosEcoturismo();
+
   return (
     <main className="flex-1">
 
       {/* ══════════════════════════════════════════════════════
           1. SECCIÓN HERO
-          Bienvenida dramática al portal del municipio.
       ══════════════════════════════════════════════════════ */}
       <EncabezadoPrincipal />
 
@@ -62,17 +60,14 @@ export default function PaginaPrincipal() {
       <GestionMunicipal />
 
       {/* ══════════════════════════════════════════════════════
-          2. SECCIÓN ECOTURISMO
-          Cuadrícula de destinos naturales con TarjetaLugar.
+          2. SECCIÓN ECOTURISMO (¡AHORA DESDE LA NUBE!)
       ══════════════════════════════════════════════════════ */}
-      
       <section
         id="ecoturismo"
         className="py-24 bg-crema"
         aria-labelledby="titulo-ecoturismo"
       >
         <div className="contenedor-sitio">
-
           {/* Encabezado */}
           <div className="flex flex-col gap-4 mb-14">
             <p className="font-cuerpo text-terracota text-xs tracking-[0.4em] uppercase">
@@ -86,59 +81,34 @@ export default function PaginaPrincipal() {
                 Destinos<br />Ecoturísticos
               </h2>
               <p className="font-cuerpo text-corteza/55 text-base leading-relaxed max-w-sm">
-                {/*
-                 * 📌 CMS: Este texto introductorio de sección puede
-                 * editarse desde el panel (campo "descripción de sección").
-                 */}
                 El municipio de Tzimol alberga 12 destinos naturales únicos.
                 Cascadas, manantiales y senderos te esperan.
               </p>
             </div>
-            {/* Línea dorada decorativa */}
             <div className="h-px w-20 bg-sol" aria-hidden="true" />
           </div>
 
-          {/* Cuadrícula de tarjetas
-           * 📌 CMS: Los lugares se ordenarán según el campo "orden" del panel.
-           * Filtros (activos/inactivos) también vendrán del CMS.
-           */}
+          {/* 5. USAMOS LA VARIABLE DE SANITY EN EL MAP */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {datos.ecoturismo.map((lugar) => (
+            {destinosSanity.map((lugar: any) => (
               <TarjetaLugar key={lugar.id} lugar={lugar} />
             ))}
           </div>
         </div>
       </section>
 
-
       {/* ══════════════════════════════════════════════════════
-          3. SECCIÓN RUTAS CULTURALES
-          Fondo oscuro que contrasta con las secciones claras.
+          3. SECCIÓN RUTAS CULTURALES (Desde JSON local)
       ══════════════════════════════════════════════════════ */}
       <SeccionRutas rutas={datos.rutasCulturales} />
 
-
       {/* ══════════════════════════════════════════════════════
-          4. SECCIÓN COMUNIDADES
-          Cuadrícula asimétrica que destaca la primera comunidad.
+          4. SECCIÓN COMUNIDADES (Desde JSON local)
       ══════════════════════════════════════════════════════ */}
       <CuadriculaComunidades comunidades={datos.comunidades} />
 
-
-      {/* ══════════════════════════════════════════════════════
-          5. SECCIÓN GASTRONOMÍA Y SERVICIOS  ← PRÓXIMAMENTE
-          📌 CMS: Descomentar cuando se cree el componente
-          <SeccionGastronomia /> y el cliente haya subido
-          las imágenes y descripciones desde el panel.
-
-          <SeccionGastronomia
-            id="gastronomia"
-            servicios={datos.gastronomiaYServicios}
-          />
-      ══════════════════════════════════════════════════════ */}
       {/* ══════════════════════════════════════════════════════
           5. SECCIÓN RELIGIÓN
-          Patrimonio arquitectónico e iglesias del municipio.
       ══════════════════════════════════════════════════════ */}
       <section id="religion" className="py-24 bg-selva border-y border-crema/10">
         <div className="contenedor-sitio text-center">
@@ -152,7 +122,6 @@ export default function PaginaPrincipal() {
             Conoce la riqueza arquitectónica y la devoción que resguardan los templos de nuestras comunidades, testigos de la historia y tradición tzimolera.
           </p>
           
-          {/* Aquí conectaremos más adelante las tarjetas de las iglesias */}
           <div className="border-2 border-dashed border-crema/20 rounded-xl p-10">
             <p className="font-cuerpo text-crema/50">
               [ Próximamente: Cuadrícula de Iglesias ]
@@ -160,7 +129,6 @@ export default function PaginaPrincipal() {
           </div>
         </div>
       </section>
-
 
       {/* ══════════════════════════════════════════════════════
           6. BANNER DE LLAMADA A LA ACCIÓN FINAL
@@ -174,10 +142,6 @@ export default function PaginaPrincipal() {
             Tzimol te espera con los brazos abiertos
           </h2>
           <p className="font-cuerpo text-crema/55 text-base max-w-md leading-relaxed">
-            {/*
-             * 📌 CMS: Texto y botón del banner final editables desde el panel
-             * (sección "Configuración → Banner de llamada a la acción").
-             */}
             Planea tu visita y descubre por qué Tzimol es uno de los municipios
             más auténticos de Chiapas.
           </p>
@@ -196,11 +160,8 @@ export default function PaginaPrincipal() {
         </div>
       </section>
 
-
       {/* ══════════════════════════════════════════════════════
           7. PIE DE PÁGINA
-          📌 CMS: Mover a app/layout.tsx si el footer es global.
-          Los datos de contacto son editables desde el panel.
       ══════════════════════════════════════════════════════ */}
       <footer className="bg-corteza py-10">
         <div className="contenedor-sitio flex flex-col md:flex-row items-center
@@ -209,7 +170,6 @@ export default function PaginaPrincipal() {
             TZIMOL
           </span>
           <span>
-            {/* 📌 CMS: Año y nombre del municipio editables desde el panel */}
             © {new Date().getFullYear()} Municipio de Tzimol, Chiapas.
             Todos los derechos reservados.
           </span>

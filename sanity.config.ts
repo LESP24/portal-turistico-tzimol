@@ -1,15 +1,19 @@
-import { defineConfig } from 'sanity';
-import { structureTool } from 'sanity/structure';
-import lugarTuristico from './sanity/schemas/lugarTuristico'; // <-- Importamos tu molde
+import { defineConfig } from 'sanity'
+import { structureTool } from 'sanity/structure'
+
+
+// 1. IMPORTAMOS TU MOLDE AQUÍ ARRIBA
+import lugarTuristico from './sanity/schemas/lugarTuristico' 
 
 export default defineConfig({
-  name: 'default',
-  title: 'Panel Tzimol',
+  basePath: '/studio',
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID as string,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET as string,
-  basePath: '/studio', 
-  plugins: [structureTool()],
+
+  plugins: [structureTool(),],
+
   schema: {
-    types: [lugarTuristico], // <-- Le decimos a Sanity que lo use
+    // 2. LO AGREGAMOS DENTRO DE LOS CORCHETES
+    types: [lugarTuristico], 
   },
-});
+})

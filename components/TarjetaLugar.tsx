@@ -11,8 +11,8 @@ import type { LugarEcoturistico } from '../types/tipos';
 // Props del componente
 // -----------------------------------------------------------
 interface PropsTarjetaLugar {
-  /** Objeto con los datos del lugar provenientes del JSON */
-  lugar: LugarEcoturistico;
+  /** Objeto con los datos del lugar provenientes del JSON o Sanity */
+  lugar: LugarEcoturistico | any; // Agregamos 'any' temporalmente para aceptar datos de Sanity sin que TypeScript se queje
 }
 
 // -----------------------------------------------------------
@@ -59,6 +59,7 @@ function IconoFlecha() {
 // Componente principal: TarjetaLugar
 // -----------------------------------------------------------
 export default function TarjetaLugar({ lugar }: PropsTarjetaLugar) {
+  // Extraemos las variables (si 'imagen' viene vacía, no pasa nada)
   const { nombre, descripcion, imagen, sitioWebOficial } = lugar;
 
   return (
@@ -71,24 +72,19 @@ export default function TarjetaLugar({ lugar }: PropsTarjetaLugar) {
       {/* El fondo bg-jade actúa como placeholder cuando la imagen no existe aún */}
       <div className="relative h-52 overflow-hidden bg-jade">
         
-        {/*
-         * 📌 CMS: La ruta de la imagen vendrá del CDN configurado
-         * en el panel de administrador. Agregar el dominio del CDN
-         * en next.config.ts → images.remotePatterns para que
-         * Next.js Image pueda optimizarla.
-         *
-         * 📁 PRODUCCIÓN: Las imágenes locales deben estar en /public/imagenes/
-         * Mientras no existan, el fondo verde jade del contenedor actúa
-         * como placeholder visual.
-         */}
-        <Image
-          src={imagen}
-          alt={`Vista de ${nombre}`}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
-        />
-
+        {/* ¡AQUÍ ESTÁ LA MAGIA ANTI-ERRORES! 
+            Solo dibujamos la etiqueta <Image> si la variable 'imagen' existe. 
+            Si está vacía, no dibuja nada y se queda el fondo verde.
+        */}
+        {imagen && (
+          <Image
+            src={imagen}
+            alt={`Vista de ${nombre}`}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
+          />
+        )}
 
         {/* Gradiente sobre la imagen para que el texto sea legible */}
         <div
@@ -121,17 +117,10 @@ export default function TarjetaLugar({ lugar }: PropsTarjetaLugar) {
 
         {/* Descripción */}
         <p className="font-cuerpo text-corteza/65 text-sm leading-relaxed flex-1">
-          {/*
-           * 📌 CMS: El cliente podrá editar esta descripción desde
-           * el panel de administrador (campo de texto enriquecido).
-           */}
           {descripcion}
         </p>
 
-        {/* ── BOTÓN CONDICIONAL ──
-            ─ Con sitioWebOficial → "Visitar sitio oficial" (abre en nueva pestaña)
-            ─ Sin sitioWebOficial → "Descubrir más" (enlace interno con Link)
-        */}
+        {/* ── BOTÓN CONDICIONAL ── */}
         {sitioWebOficial ? (
           <a
             href={sitioWebOficial}
@@ -144,14 +133,11 @@ export default function TarjetaLugar({ lugar }: PropsTarjetaLugar) {
             <IconoExterno />
           </a>
         ) : (
-          /*
-           * 📌 CMS: Este Link apunta a la futura página de detalle del lugar.
-           * La URL se construye con el campo `id` del JSON.
-           * Cuando crees app/ecoturismo/[id]/page.tsx, la navegación
-           * funcionará automáticamente sin cambiar nada aquí.
-           */
+          /* ¡AQUÍ ACTUALIZAMOS LA RUTA! 
+             Ahora apunta a la nueva carpeta /destinos/ que creaste.
+          */
           <Link
-            href={`/ecoturismo/${lugar.id}`}
+            href={`/destinos/${lugar.id}`}
             className="boton-secundario self-start mt-2 group/boton"
             aria-label={`Descubrir más sobre ${nombre}`}
           >

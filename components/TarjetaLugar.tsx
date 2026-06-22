@@ -70,23 +70,25 @@ export default function TarjetaLugar({ lugar }: PropsTarjetaLugar) {
       {/* ── IMAGEN DEL LUGAR ── */}
       {/* El fondo bg-jade actúa como placeholder cuando la imagen no existe aún */}
       <div className="relative h-52 overflow-hidden bg-jade">
+        
+        {/*
+         * 📌 CMS: La ruta de la imagen vendrá del CDN configurado
+         * en el panel de administrador. Agregar el dominio del CDN
+         * en next.config.ts → images.remotePatterns para que
+         * Next.js Image pueda optimizarla.
+         *
+         * 📁 PRODUCCIÓN: Las imágenes locales deben estar en /public/imagenes/
+         * Mientras no existan, el fondo verde jade del contenedor actúa
+         * como placeholder visual.
+         */}
         <Image
           src={imagen}
           alt={`Vista de ${nombre}`}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           className="object-cover transition-transform duration-700 group-hover:scale-110"
-          /*
-           * 📌 CMS: La ruta de la imagen vendrá del CDN configurado
-           * en el panel de administrador. Agregar el dominio del CDN
-           * en next.config.ts → images.remotePatterns para que
-           * Next.js Image pueda optimizarla.
-           *
-           * 📁 PRODUCCIÓN: Las imágenes locales deben estar en /public/imagenes/
-           * Mientras no existan, el fondo verde jade del contenedor actúa
-           * como placeholder visual.
-           */
         />
+
 
         {/* Gradiente sobre la imagen para que el texto sea legible */}
         <div

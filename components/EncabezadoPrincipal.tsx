@@ -26,22 +26,13 @@ function IconoFlecha() {
 // -----------------------------------------------------------
 export default function EncabezadoPrincipal() {
   return (
-    <header className="relative min-h-screen flex flex-col justify-between overflow-hidden bg-selva">
-
-      {/* ── CAPA 1: Textura de puntos dorados (patrón CSS, sin imagen) ── */}
+    <header 
+      className="relative min-h-screen flex flex-col justify-between overflow-hidden bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: "url('/imagenes/fondo-inicio.jpeg')" }}
+    >
+      {/* ── CAPA OSCURA: Para asegurar que el texto blanco siempre se lea ── */}
       <div
-        className="absolute inset-0 opacity-10 pointer-events-none"
-        style={{
-          backgroundImage:
-            'radial-gradient(circle, rgba(212,168,83,0.6) 1px, transparent 1px)',
-          backgroundSize: '32px 32px',
-        }}
-        aria-hidden="true"
-      />
-
-      {/* ── CAPA 2: Gradiente diagonal que da profundidad ── */}
-      <div
-        className="absolute inset-0 bg-gradient-to-br from-jade/40 via-selva to-corteza/80 pointer-events-none"
+        className="absolute inset-0 bg-black/50 pointer-events-none"
         aria-hidden="true"
       />
 
@@ -54,17 +45,14 @@ export default function EncabezadoPrincipal() {
 
       {/* ── BARRA DE NAVEGACIÓN SUPERIOR ── */}
       <nav className="relative z-10 contenedor-sitio flex items-center justify-between pt-8">
-        {/* Logotipo textual */}
-        <span className="font-titulo text-crema text-2xl tracking-widest">
-          TZIMOL
-        </span>
+        
 
         {/* 
           📌 CMS: Los elementos del menú de navegación pueden gestionarse
           desde el panel de administrador (añadir/quitar secciones del portal).
         */}
         <ul className="hidden md:flex items-center gap-8">
-          {['Ecoturismo', 'Rutas', 'Comunidades', 'Gastronomía'].map((seccion) => (
+          {['Ecoturismo', 'Rutas', 'Comunidades', 'Religion'].map((seccion) => (
             <li key={seccion}>
               <a
                 href={`#${seccion.toLowerCase()}`}
@@ -101,7 +89,7 @@ export default function EncabezadoPrincipal() {
         {/* Eslogan */}
         <p className="animacion-revelar retraso-400 font-cuerpo italic text-crema/75
                       text-lg md:text-2xl max-w-lg leading-relaxed">
-          Naturaleza, cultura y tradición en el corazón de la selva chiapaneca.
+          Naturaleza, cultura y tradición en el corazón de Chiapas.
         </p>
 
         {/* Botones de llamada a la acción */}
@@ -126,31 +114,7 @@ export default function EncabezadoPrincipal() {
         </div>
       </div>
 
-      {/* ── BANDA INFERIOR: Categorías de exploración ── */}
-      <div className="relative z-10 border-t border-crema/10">
-        <div className="contenedor-sitio grid grid-cols-2 md:grid-cols-4">
-          {[
-            { etiqueta: 'Ecoturismo', numero: '08', ancla: '#ecoturismo' },
-            { etiqueta: 'Rutas Culturales', numero: '04', ancla: '#rutas' },
-            { etiqueta: 'Comunidades', numero: '05', ancla: '#comunidades' },
-            { etiqueta: 'Gastronomía', numero: '05', ancla: '#gastronomia' },
-          ].map(({ etiqueta, numero, ancla }) => (
-            <a
-              key={etiqueta}
-              href={ancla}
-              className="group flex flex-col gap-1 px-4 py-5
-                         border-r border-crema/10 last:border-r-0
-                         hover:bg-crema/5 transition-colors duration-300"
-            >
-              <span className="font-titulo text-sol text-3xl">{numero}</span>
-              <span className="font-cuerpo text-crema/60 text-xs tracking-widest uppercase
-                               group-hover:text-crema transition-colors duration-300">
-                {etiqueta}
-              </span>
-            </a>
-          ))}
-        </div>
-      </div>
+    
 
       {/* ── INDICADOR DE SCROLL ── */}
       <div className="absolute bottom-36 right-8 z-10 hidden md:flex flex-col
@@ -160,7 +124,20 @@ export default function EncabezadoPrincipal() {
         </span>
         <IconoFlecha />
       </div>
-
+{/* ── INDICADOR DE SCROLL ── */}
+      <a 
+        href="#ecoturismo"
+        className="absolute bottom-36 right-8 z-10 hidden md:flex flex-col
+                   items-center gap-2 text-crema/40 hover:text-sol transition-colors duration-300 cursor-pointer group"
+        aria-label="Ir a la sección de destinos"
+      >
+        <span className="font-cuerpo text-[10px] tracking-[0.3em] uppercase [writing-mode:vertical-rl] group-hover:-translate-y-1 transition-transform duration-300">
+          Descubrir
+        </span>
+        <div className="group-hover:translate-y-1 transition-transform duration-300">
+          <IconoFlecha />
+        </div>
+      </a>
     </header>
   );
 }

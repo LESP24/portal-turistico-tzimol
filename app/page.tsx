@@ -29,10 +29,12 @@ import datosTzimol from '../data/datos_tzimol.json';
 import type { DatosTzimol } from '../types/tipos';
 
 // Componentes del portal
+import GestionMunicipal from '@/components/GestionMunicipal';
 import EncabezadoPrincipal from '../components/EncabezadoPrincipal';
 import TarjetaLugar from '../components/TarjetaLugar';
 import SeccionRutas from '../components/SeccionRutas';
 import CuadriculaComunidades from '../components/CuadriculaComunidades';
+
 // Casting al tipo fuerte para que TypeScript valide la estructura
 const datos = datosTzimol as DatosTzimol;
 
@@ -48,7 +50,7 @@ export const metadata = {
 // -----------------------------------------------------------
 export default function PaginaPrincipal() {
   return (
-    <main>
+    <main className="flex-1">
 
       {/* ══════════════════════════════════════════════════════
           1. SECCIÓN HERO
@@ -56,11 +58,14 @@ export default function PaginaPrincipal() {
       ══════════════════════════════════════════════════════ */}
       <EncabezadoPrincipal />
 
+      {/* ── SECCIÓN POLÍTICA / GESTIÓN ── */}
+      <GestionMunicipal />
 
       {/* ══════════════════════════════════════════════════════
           2. SECCIÓN ECOTURISMO
           Cuadrícula de destinos naturales con TarjetaLugar.
       ══════════════════════════════════════════════════════ */}
+      
       <section
         id="ecoturismo"
         className="py-24 bg-crema"
@@ -85,7 +90,7 @@ export default function PaginaPrincipal() {
                  * 📌 CMS: Este texto introductorio de sección puede
                  * editarse desde el panel (campo "descripción de sección").
                  */}
-                El municipio de Tzimol alberga ocho destinos naturales únicos.
+                El municipio de Tzimol alberga 12 destinos naturales únicos.
                 Cascadas, manantiales y senderos te esperan.
               </p>
             </div>
@@ -131,6 +136,30 @@ export default function PaginaPrincipal() {
             servicios={datos.gastronomiaYServicios}
           />
       ══════════════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════════════════
+          5. SECCIÓN RELIGIÓN
+          Patrimonio arquitectónico e iglesias del municipio.
+      ══════════════════════════════════════════════════════ */}
+      <section id="religion" className="py-24 bg-selva border-y border-crema/10">
+        <div className="contenedor-sitio text-center">
+          <p className="font-cuerpo text-sol text-xs tracking-[0.4em] uppercase mb-4">
+            Patrimonio Histórico
+          </p>
+          <h2 className="font-titulo text-crema text-4xl md:text-5xl mb-6">
+            Nuestras Iglesias y Templos
+          </h2>
+          <p className="font-cuerpo text-crema/70 max-w-2xl mx-auto mb-16">
+            Conoce la riqueza arquitectónica y la devoción que resguardan los templos de nuestras comunidades, testigos de la historia y tradición tzimolera.
+          </p>
+          
+          {/* Aquí conectaremos más adelante las tarjetas de las iglesias */}
+          <div className="border-2 border-dashed border-crema/20 rounded-xl p-10">
+            <p className="font-cuerpo text-crema/50">
+              [ Próximamente: Cuadrícula de Iglesias ]
+            </p>
+          </div>
+        </div>
+      </section>
 
 
       {/* ══════════════════════════════════════════════════════
